@@ -1,6 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <None Remove="Images\bengal.jpg" />
+    <None Remove="Images\flowers.png" />
+    <None Remove="Images\mainkoon.jpg" />
+    <None Remove="Images\no_img.png" />
+    <None Remove="Images\scotland.jpg" />
+    <None Remove="Images\sphynx.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\bengal.jpg" />
+    <Resource Include="Images\flowers.png" />
+    <Resource Include="Images\mainkoon.jpg" />
+    <Resource Include="Images\no_img.png" />
+    <Resource Include="Images\scotland.jpg" />
+    <Resource Include="Images\sphynx.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CourseProject.DataLayer\CourseProject.DataLayer.csproj" />
   </ItemGroup>
 

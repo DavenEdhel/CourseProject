@@ -4,11 +4,12 @@ namespace CourseProject.UI.Services;
 
 public interface INavigationService
 {
-    void Navigate<T>(NavigationMode mode) where T : Window, new();
+    void Navigate(Window window, NavigationMode mode);
 }
 
 public enum NavigationMode
 {
     Open,
-    Set
+    Set,
+    Modal
 }

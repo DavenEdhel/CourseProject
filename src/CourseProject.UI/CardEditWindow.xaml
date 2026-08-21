@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CourseProject.UI"
         mc:Ignorable="d"
         FontSize="12"
-        Title="Карточка породистого кота" Height="550" Width="400">
+        Title="Карточка породистого кота" Height="550" Width="400"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/Images/flowers.png"/>
@@ -38,46 +39,46 @@
 
             <!-- фото -->
             <Grid Grid.Column="0" Grid.ColumnSpan="2">
-                <Image x:Name="image" Source="/Images/no_img.png"
+                <Image x:Name="Image" Source="/Images/no_img.png"
                     Width="170" Height="80"
                     HorizontalAlignment="Center"
                     Margin="0,10,0,0"
-                    Stretch="Uniform" MouseDown="image_MouseDown"
+                    Stretch="Uniform"
                     ToolTip="Нажмите для выбора фото"/>
             </Grid>
             <Grid Grid.Column="0" Grid.ColumnSpan="2">
-                <Image x:Name="image1"/>
+                <Image x:Name="Image1"/>
             </Grid>
 
 
             <!-- кличка -->
             <Label Content="Кличка:" FontWeight="Bold" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11"/>
-            <TextBox x:Name="textBoxName" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
+            <TextBox x:Name="TextBoxName" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
 
             <!-- порода -->
             <Label Content="Порода:" FontWeight="Bold" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11"/>
-            <TextBox x:Name="textBoxBreed" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
+            <TextBox x:Name="TextBoxBreed" Text="{Binding Breed, UpdateSourceTrigger=PropertyChanged}" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
 
             <!-- окрас -->
             <Label Content="Окрас:" FontWeight="Bold" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11"/>
-            <TextBox x:Name="textBoxColor" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
+            <TextBox x:Name="TextBoxColor" Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
 
             <!-- др -->
             <Label Content="Дата рождения:" FontWeight="Bold" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11"/>
-            <DatePicker x:Name="datePickerDOB" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
+            <DatePicker x:Name="DatePickerDateOfBirth" SelectedDate="{Binding DateOfBirth}" Margin="1,5,1,5" VerticalAlignment="Center" FontSize="11" Height="20"/>
 
             <!-- вес -->
             <Label Content="Вес (кг):" FontWeight="Bold" Margin="1,0" VerticalAlignment="Center" FontSize="11"/>
             <StackPanel Margin="1,0" VerticalAlignment="Center">
-                <Slider x:Name="sliderWeight" Minimum="1" Maximum="15" Value="5"
+                <Slider x:Name="SliderWeight" Value="{Binding Weight}" Minimum="1" Maximum="15"
                      TickFrequency="1" IsSnapToTickEnabled="True" Height="18"/>
-                <TextBlock Text="{Binding ElementName=sliderWeight, Path=Value, StringFormat={}{0:0}}"
+                <TextBlock Text="{Binding ElementName=SliderWeight, Path=Value, StringFormat={}{0:0}}"
                         HorizontalAlignment="Center" FontWeight="Bold" FontSize="9"/>
             </StackPanel>
 
             <!-- глаза -->
             <Label Content="Цвет глаз:" FontWeight="Bold" Margin="1,0" VerticalAlignment="Center" FontSize="11"/>
-            <ComboBox x:Name="comboBoxEyes" Margin="1,0" VerticalAlignment="Center" FontSize="11" Height="20">
+            <ComboBox x:Name="ComboBoxEyes" Margin="1,0" VerticalAlignment="Center" FontSize="11" Height="20">
                 <ComboBoxItem Content="Зеленые" IsSelected="True"/>
                 <ComboBoxItem Content="Голубые"/>
                 <ComboBoxItem Content="Желтые"/>
@@ -92,8 +93,8 @@
         <UniformGrid Grid.Row="1" Columns="1" Margin="1 1 1 10">
             <GroupBox Margin="1,0" FontSize="10" BorderThickness="1" Padding="2" HorizontalAlignment="Center" VerticalAlignment="Center" Header="Пол">
                 <StackPanel Orientation="Horizontal" >
-                    <RadioButton x:Name="radioButtonMale" Content="Кот" Margin="2,0" GroupName="Gender" FontSize="10"/>
-                    <RadioButton x:Name="radioButtonFemale" Content="Кошка" Margin="2,0" GroupName="Gender" IsChecked="True" FontSize="10"/>
+                    <RadioButton x:Name="RadioButtonMale" Content="Кот" IsChecked="{Binding IsMale}" Margin="2,0" GroupName="Gender" FontSize="10"/>
+                    <RadioButton x:Name="RadioButtonFemale" Content="Кошка" IsChecked="{Binding IsFemale}" Margin="2,0" GroupName="Gender" FontSize="10"/>
                 </StackPanel>
             </GroupBox>
         </UniformGrid>
@@ -101,31 +102,28 @@
         <Border Grid.Row="2" Padding="0 5" Background="#90FFFFFF">
             <UniformGrid Columns="1" Margin="1">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <CheckBox x:Name="checkBoxVaccinated" Content="Приавивки" Margin="3,0" FontSize="12"/>
-                    <CheckBox x:Name="checkBoxSterilized" Content="Стерилизована/Кастрирован" Margin="3,0"/>
-                    <CheckBox x:Name="checkBoxDocumented" Content="Документы" Margin="3,0" FontSize="12"/>
+                    <CheckBox x:Name="CheckBoxVaccinated" Content="Приавивки" Margin="3,0" FontSize="12"/>
+                    <CheckBox x:Name="CheckBoxSterilized" Content="Стерилизована/Кастрирован" Margin="3,0"/>
+                    <CheckBox x:Name="CheckBoxDocumented" Content="Документы" Margin="3,0" FontSize="12"/>
                 </StackPanel>
             </UniformGrid>
         </Border>
         <!-- кнопки -->
         <UniformGrid Grid.Row="3" Columns="3" Margin="0,20,0,20">
 
-            <Button x:Name="buttonLoad" Content="Загрузить"
+            <Button x:Name="ButtonLoad" Content="Загрузить"
          Margin="15,1" Padding="3,1"
-         Background="#ED7E8D" FontWeight="Bold" FontSize="11"
-         Click="ButtonLoad_Click"/>
+         Background="#ED7E8D" FontWeight="Bold" FontSize="11"/>
 
 
-            <Button x:Name="buttonSave" Content="Сохранить"
+            <Button x:Name="ButtonSave" Content="Сохранить"
          Margin="15,1" Padding="3,1"
-         Background="#FA5772" FontWeight="Bold" FontSize="11"
-         Click="ButtonSave_Click"/>
+         Background="#FA5772" FontWeight="Bold" FontSize="11"/>
 
 
-            <Button x:Name="buttonClear" Content="Очистить"
+            <Button x:Name="ButtonClear" Content="Очистить"
          Margin="15,1" Padding="3,1"
-         Background="LightCoral" FontWeight="Bold" FontSize="11"
-         Click="ButtonClear_Click"/>
+         Background="LightCoral" FontWeight="Bold" FontSize="11"/>
 
 
         </UniformGrid>

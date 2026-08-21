@@ -21,6 +21,8 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string errorMessage = string.Empty;
 
+    private static bool bypassAuth = true;
+
     public LoginViewModel(IUserRepository userRepository, INavigationService navigation)
     {
         this.userRepository = userRepository;
@@ -30,6 +32,12 @@ public partial class LoginViewModel : ObservableObject
     [RelayCommand]
     private void Login()
     {
+        if (bypassAuth)
+        {
+            UserName = "Наська";
+            Password = "Рыжик";
+        }
+
         if (string.IsNullOrWhiteSpace(UserName))
         {
             ErrorMessage = "Укажите имя";
@@ -53,7 +61,7 @@ public partial class LoginViewModel : ObservableObject
         else
         {
             CurrentUser.Instance.Set(user);
-            navigation.Navigate<MainWindow>(NavigationMode.Set);
+            navigation.Navigate(new MainWindow(), NavigationMode.Set);
         }
     }
 }

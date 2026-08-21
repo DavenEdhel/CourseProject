@@ -1,22 +1,78 @@
-﻿<Window x:Class="CourseProject.UI.MainWindow"
+<Window x:Class="CourseProject.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProject.UI"
         mc:Ignorable="d"
-        Title="CourseProject" Height="250" Width="350"
+        Title="Карточки" Height="500" Width="380"
         WindowStartupLocation="CenterScreen">
-    <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Text="{Binding Value}"
-                       FontSize="36"
-                       HorizontalAlignment="Center"
-                       Margin="0,0,0,20" />
-            <Button Content="Click me"
-                    Command="{Binding IncrementCommand}"
-                    Width="120"
-                    Height="40" />
-        </StackPanel>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Content="Добавить"
+                Command="{Binding AddCommand}"
+                HorizontalAlignment="Left"
+                Padding="10,4"
+                Margin="0,0,0,10" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Cards}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#CCCCCC"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Background="White"
+                                Padding="8"
+                                Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0"
+                                        Width="50" Height="50"
+                                        Background="#EEEEEE"
+                                        CornerRadius="4"
+                                        VerticalAlignment="Top">
+                                    <TextBlock Text="🐱"
+                                               FontSize="24"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" />
+                                    <TextBlock Text="{Binding Breed}" FontSize="12" Foreground="Gray" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Top">
+                                    <Button Content="✎"
+                                            Width="20" Height="20" Padding="0"
+                                            Margin="0,0,4,0"
+                                            ToolTip="Редактировать"
+                                            Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+                                    <Button Content="✕"
+                                            Width="20" Height="20" Padding="0"
+                                            ToolTip="Удалить"
+                                            Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>

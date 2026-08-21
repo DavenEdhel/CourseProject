@@ -6,10 +6,8 @@ public class NavigationService : INavigationService
 {
     private Window? activeWindow;
 
-    public void Navigate<T>(NavigationMode mode) where T : Window, new()
+    public void Navigate(Window window, NavigationMode mode)
     {
-        var window = new T();
-
         switch (mode)
         {
             case NavigationMode.Open:
@@ -32,6 +30,16 @@ public class NavigationService : INavigationService
                 Application.Current.MainWindow = window;
 
                 previousWindow?.Close();
+                break;
+            }
+
+            case NavigationMode.Modal:
+            {
+                window.Owner = activeWindow;
+                var previouslyActive = activeWindow;
+                activeWindow = window;
+                window.ShowDialog();
+                activeWindow = previouslyActive;
                 break;
             }
         }

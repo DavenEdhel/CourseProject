@@ -1,15 +1,5 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.ComponentModel;
-using System.Windows.Shapes;
-using CourseProject.DataLayer.Repositories;
+using System.Windows;
 using CourseProject.UI.ViewModels;
 
 namespace CourseProject.UI;
@@ -28,7 +18,7 @@ public partial class MainWindow : Window
         // in the editor. Skip touching the database in that case.
         if (!DesignerProperties.GetIsInDesignMode(this))
         {
-            DataContext = new CounterViewModel(new CounterRepository());
+            DataContext = new MainViewModel(App.Navigation);
         }
     }
 }

@@ -15,6 +15,6 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        Navigation.Navigate<LoginWindow>(NavigationMode.Set);
+        Navigation.Navigate(new LoginWindow(), NavigationMode.Set);
     }
 }
