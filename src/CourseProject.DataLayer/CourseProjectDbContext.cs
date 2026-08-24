@@ -12,6 +12,8 @@ public partial class CourseProjectDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Cat> Cats { get; set; }
+
     public virtual DbSet<Counter> Counters { get; set; }
 
     public virtual DbSet<Table> Tables { get; set; }
@@ -20,6 +22,19 @@ public partial class CourseProjectDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Cat>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Cat__3214EC07D034038A");
+
+            entity.ToTable("Cat");
+
+            entity.Property(e => e.Breed).HasMaxLength(100);
+            entity.Property(e => e.Color).HasMaxLength(100);
+            entity.Property(e => e.EyeColor).HasMaxLength(50);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.PhotoPath).HasMaxLength(260);
+        });
+
         modelBuilder.Entity<Counter>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Counter__3214EC07124C84EC");
