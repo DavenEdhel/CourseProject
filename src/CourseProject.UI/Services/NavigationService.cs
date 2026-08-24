@@ -44,4 +44,10 @@ public class NavigationService : INavigationService
             }
         }
     }
+
+    public void Back()
+    {
+        activeWindow?.Close();
+        // todo: think about navigation stack, but currently it is not necessary
+    }
 }

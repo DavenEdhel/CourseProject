@@ -13,10 +13,4 @@ public partial class CardEditWindow : Window
         InitializeComponent();
         DataContext = viewModel;
     }
-
-    private void ButtonSave_Click(object sender, RoutedEventArgs e)
-    {
-        DialogResult = true;
-        Close();
-    }
 }

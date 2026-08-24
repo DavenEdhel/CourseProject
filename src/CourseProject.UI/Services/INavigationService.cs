@@ -5,6 +5,8 @@ namespace CourseProject.UI.Services;
 public interface INavigationService
 {
     void Navigate(Window window, NavigationMode mode);
+
+    void Back();
 }
 
 public enum NavigationMode

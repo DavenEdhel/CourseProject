@@ -4,10 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProject.UI"
+        xmlns:converters="clr-namespace:CourseProject.UI.Converters"
         mc:Ignorable="d"
         FontSize="12"
         Title="Карточка породистого кота" Height="550" Width="400"
         ResizeMode="NoResize">
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/Images/flowers.png"/>
@@ -109,16 +113,12 @@
             </UniformGrid>
         </Border>
         <!-- кнопки -->
-        <UniformGrid Grid.Row="3" Columns="3" Margin="0,20,0,20">
-
-            <Button x:Name="ButtonLoad" Content="Загрузить"
-         Margin="15,1" Padding="3,1"
-         Background="#ED7E8D" FontWeight="Bold" FontSize="11"/>
-
+        <UniformGrid Grid.Row="3" Columns="2" Margin="0,20,0,20">
 
             <Button x:Name="ButtonSave" Content="Сохранить"
          Margin="15,1" Padding="3,1"
-         Background="#FA5772" FontWeight="Bold" FontSize="11"/>
+         Background="#FA5772" FontWeight="Bold" FontSize="11"
+         Command="{Binding SaveCommand}"/>
 
 
             <Button x:Name="ButtonClear" Content="Очистить"

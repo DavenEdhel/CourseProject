@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
+using CourseProject.DataLayer.Repositories;
 using CourseProject.UI.ViewModels;
 
 namespace CourseProject.UI;
@@ -18,7 +19,7 @@ public partial class MainWindow : Window
         // in the editor. Skip touching the database in that case.
         if (!DesignerProperties.GetIsInDesignMode(this))
         {
-            DataContext = new MainViewModel(App.Navigation);
+            DataContext = new MainViewModel(App.Navigation, new CatRepository());
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CourseProject.DataLayer.Repositories;
 using CourseProject.UI.Services;
 
 namespace CourseProject.UI.ViewModels;
@@ -9,34 +10,25 @@ namespace CourseProject.UI.ViewModels;
 public partial class MainViewModel : ObservableObject
 {
     private readonly INavigationService navigation;
+    private readonly ICatRepository catRepository;
 
-    public ObservableCollection<CardEditViewModel> Cards { get; } = new()
-    {
-        new CardEditViewModel()
-        {
-            Breed = "aaa",
-            Color = "red",
-            DateOfBirth = DateTime.Now.AddMonths(-6),
-            EyeColor = "green",
-            HasDocuments = true,
-            IsMale = true,
-            IsSterilized = true,
-            IsVaccinated = true,
-            Name = "Redgy",
-            PhotoPath = "/Images/bengal.jpg",
-            Weight = 5
-        }
-    };
+    public ObservableCollection<CardEditViewModel> Cards { get; } = new();
 
-    public MainViewModel(INavigationService navigation)
+    public MainViewModel(INavigationService navigation, ICatRepository catRepository)
     {
         this.navigation = navigation;
+        this.catRepository = catRepository;
+
+        foreach (var cat in catRepository.GetAll())
+        {
+            Cards.Add(new CardEditViewModel(catRepository, navigation, cat));
+        }
     }
 
     [RelayCommand]
     private void Add()
     {
-        var card = new CardEditViewModel();
+        var card = new CardEditViewModel(catRepository, navigation);
         navigation.Navigate(new CardEditWindow(card), NavigationMode.Modal);
 
         if (card.Saved)
@@ -54,6 +46,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void Delete(CardEditViewModel card)
     {
+        catRepository.Delete(card.Id);
         Cards.Remove(card);
     }
 }
