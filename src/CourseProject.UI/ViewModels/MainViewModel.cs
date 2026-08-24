@@ -19,7 +19,6 @@ public partial class MainViewModel : ObservableObject
             DateOfBirth = DateTime.Now.AddMonths(-6),
             EyeColor = "green",
             HasDocuments = true,
-            IsFemale = false,
             IsMale = true,
             IsSterilized = true,
             IsVaccinated = true,

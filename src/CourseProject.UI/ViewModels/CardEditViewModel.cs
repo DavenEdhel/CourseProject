@@ -30,9 +30,6 @@ public partial class CardEditViewModel : ObservableObject
     private bool isMale;
 
     [ObservableProperty]
-    private bool isFemale;
-
-    [ObservableProperty]
     private bool isVaccinated;
 
     [ObservableProperty]
