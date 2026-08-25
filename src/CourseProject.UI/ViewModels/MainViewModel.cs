@@ -38,6 +38,13 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void Statistics()
+    {
+        var statisticsViewModel = new StatisticsViewModel(catRepository);
+        navigation.Navigate(new StatisticsWindow(statisticsViewModel), NavigationMode.Modal);
+    }
+
+    [RelayCommand]
     private void Edit(CardEditViewModel card)
     {
         navigation.Navigate(new CardEditWindow(card), NavigationMode.Modal);

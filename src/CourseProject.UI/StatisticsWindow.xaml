@@ -1,0 +1,78 @@
+<Window x:Class="CourseProject.UI.StatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Статистика" Height="520" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="16">
+
+            <TextBlock Text="Возраст котов (лет)"
+                       FontSize="14" FontWeight="Bold"
+                       Margin="0,0,0,10" />
+
+            <Border BorderBrush="#CCCCCC" BorderThickness="1" Padding="8">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding AgeHistogram}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Width="40" Margin="4,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="120" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border Grid.Row="0"
+                                            Height="{Binding BarHeight}"
+                                            VerticalAlignment="Bottom"
+                                            Background="#4A90D9" />
+                                    <TextBlock Grid.Row="0"
+                                               Text="{Binding Count}"
+                                               VerticalAlignment="Top"
+                                               HorizontalAlignment="Center"
+                                               FontSize="10"
+                                               Margin="0,2,0,0" />
+
+                                    <TextBlock Grid.Row="1"
+                                               Text="{Binding Label}"
+                                               HorizontalAlignment="Center"
+                                               FontSize="10"
+                                               Margin="0,4,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <TextBlock Text="Пол"
+                       FontSize="14" FontWeight="Bold"
+                       Margin="0,20,0,10" />
+
+            <Border BorderBrush="#CCCCCC" BorderThickness="1" Padding="8">
+                <StackPanel HorizontalAlignment="Center">
+                    <Grid Width="180" Height="180">
+                        <Path Data="{Binding MaleGeometry}" Fill="#4A90D9" />
+                        <Path Data="{Binding FemaleGeometry}" Fill="#D94A90" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <Border Width="12" Height="12" Background="#4A90D9" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding MaleLabel}" Margin="0,0,16,0" VerticalAlignment="Center" />
+                        <Border Width="12" Height="12" Background="#D94A90" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <TextBlock Text="{Binding FemaleLabel}" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>
