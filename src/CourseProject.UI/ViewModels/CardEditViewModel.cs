@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CourseProject.DataLayer.Models;
@@ -9,8 +11,12 @@ namespace CourseProject.UI.ViewModels;
 
 public partial class CardEditViewModel : ObservableObject
 {
+    private const string AvatarsFolderName = "avatars";
+
     private readonly ICatRepository catRepository;
     private readonly INavigationService navigationService;
+
+    public static IReadOnlyList<string> EyeColorOptions { get; } = new[] { "Зеленые", "Голубые", "Желтые", "Карие" };
 
     public int Id { get; private set; }
 
@@ -73,9 +79,33 @@ public partial class CardEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Save()
+    private void SetMale()
     {
-        var cat = new Cat
+        IsMale = true;
+    }
+
+    [RelayCommand]
+    private void SetFemale()
+    {
+        IsMale = false;
+    }
+
+    public void SetPhoto(string sourceFilePath)
+    {
+        var avatarsDirectory = Path.Combine(AppContext.BaseDirectory, AvatarsFolderName);
+        Directory.CreateDirectory(avatarsDirectory);
+
+        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(sourceFilePath)}";
+        var destinationPath = Path.Combine(avatarsDirectory, fileName);
+
+        File.Copy(sourceFilePath, destinationPath, overwrite: true);
+
+        PhotoPath = Path.Combine(AvatarsFolderName, fileName);
+    }
+
+    public Cat ToCat()
+    {
+        return new Cat
         {
             Id = Id,
             Name = Name,
@@ -90,6 +120,12 @@ public partial class CardEditViewModel : ObservableObject
             HasDocuments = HasDocuments,
             PhotoPath = PhotoPath
         };
+    }
+
+    [RelayCommand]
+    private void Save()
+    {
+        var cat = ToCat();
 
         catRepository.Save(cat);
 

@@ -1,0 +1,29 @@
+using System;
+using System.Globalization;
+using System.IO;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
+
+namespace CourseProject.UI.Converters;
+
+public sealed class PhotoPathToOptionalImageSourceConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string relativePath && !string.IsNullOrWhiteSpace(relativePath))
+        {
+            var fullPath = Path.Combine(AppContext.BaseDirectory, relativePath);
+            if (File.Exists(fullPath))
+            {
+                return new BitmapImage(new Uri(fullPath, UriKind.Absolute));
+            }
+        }
+
+        return null;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+}

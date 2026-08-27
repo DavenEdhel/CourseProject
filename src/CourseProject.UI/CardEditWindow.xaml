@@ -11,6 +11,7 @@
         ResizeMode="NoResize">
     <Window.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converters:PhotoPathToImageSourceConverter x:Key="PhotoPathToImageSourceConverter" />
     </Window.Resources>
     <Grid>
         <Grid.Background>
@@ -43,11 +44,14 @@
 
             <!-- фото -->
             <Grid Grid.Column="0" Grid.ColumnSpan="2">
-                <Image x:Name="Image" Source="/Images/no_img.png"
+                <Image x:Name="Image"
+                    Source="{Binding PhotoPath, Converter={StaticResource PhotoPathToImageSourceConverter}}"
                     Width="170" Height="80"
                     HorizontalAlignment="Center"
                     Margin="0,10,0,0"
                     Stretch="Uniform"
+                    Cursor="Hand"
+                    MouseLeftButtonDown="Image_MouseLeftButtonDown"
                     ToolTip="Нажмите для выбора фото"/>
             </Grid>
             <Grid Grid.Column="0" Grid.ColumnSpan="2">
@@ -82,12 +86,10 @@
 
             <!-- глаза -->
             <Label Content="Цвет глаз:" FontWeight="Bold" Margin="1,0" VerticalAlignment="Center" FontSize="11"/>
-            <ComboBox x:Name="ComboBoxEyes" Margin="1,0" VerticalAlignment="Center" FontSize="11" Height="20">
-                <ComboBoxItem Content="Зеленые" IsSelected="True"/>
-                <ComboBoxItem Content="Голубые"/>
-                <ComboBoxItem Content="Желтые"/>
-                <ComboBoxItem Content="Карие"/>
-            </ComboBox>
+            <ComboBox x:Name="ComboBoxEyes"
+                      ItemsSource="{Binding EyeColorOptions}"
+                      SelectedItem="{Binding EyeColor}"
+                      Margin="1,0" VerticalAlignment="Center" FontSize="11" Height="20"/>
 
 
 
@@ -97,8 +99,14 @@
         <UniformGrid Grid.Row="1" Columns="1" Margin="1 1 1 10">
             <GroupBox Margin="1,0" FontSize="10" BorderThickness="1" Padding="2" HorizontalAlignment="Center" VerticalAlignment="Center" Header="Пол">
                 <StackPanel Orientation="Horizontal" >
-                    <RadioButton x:Name="RadioButtonMale" Content="Кот" IsChecked="{Binding IsMale}" Margin="2,0" GroupName="Gender" FontSize="10"/>
-                    <RadioButton x:Name="RadioButtonFemale" Content="Кошка" IsChecked="{Binding IsMale, Converter={StaticResource InverseBooleanConverter}}" Margin="2,0" GroupName="Gender" FontSize="10"/>
+                    <RadioButton x:Name="RadioButtonMale" Content="Кот"
+                                 IsChecked="{Binding IsMale, Mode=OneWay}"
+                                 Command="{Binding SetMaleCommand}"
+                                 Margin="2,0" FontSize="10"/>
+                    <RadioButton x:Name="RadioButtonFemale" Content="Кошка"
+                                 IsChecked="{Binding IsMale, Converter={StaticResource InverseBooleanConverter}, Mode=OneWay}"
+                                 Command="{Binding SetFemaleCommand}"
+                                 Margin="2,0" FontSize="10"/>
                 </StackPanel>
             </GroupBox>
         </UniformGrid>
@@ -106,9 +114,9 @@
         <Border Grid.Row="2" Padding="0 5" Background="#90FFFFFF">
             <UniformGrid Columns="1" Margin="1">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <CheckBox x:Name="CheckBoxVaccinated" Content="Приавивки" Margin="3,0" FontSize="12"/>
-                    <CheckBox x:Name="CheckBoxSterilized" Content="Стерилизована/Кастрирован" Margin="3,0"/>
-                    <CheckBox x:Name="CheckBoxDocumented" Content="Документы" Margin="3,0" FontSize="12"/>
+                    <CheckBox x:Name="CheckBoxVaccinated" Content="Приавивки" IsChecked="{Binding IsVaccinated}" Margin="3,0" FontSize="12"/>
+                    <CheckBox x:Name="CheckBoxSterilized" Content="Стерилизована/Кастрирован" IsChecked="{Binding IsSterilized}" Margin="3,0"/>
+                    <CheckBox x:Name="CheckBoxDocumented" Content="Документы" IsChecked="{Binding HasDocuments}" Margin="3,0" FontSize="12"/>
                 </StackPanel>
             </UniformGrid>
         </Border>

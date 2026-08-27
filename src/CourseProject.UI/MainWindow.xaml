@@ -4,11 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProject.UI"
+        xmlns:converters="clr-namespace:CourseProject.UI.Converters"
         mc:Ignorable="d"
-        Title="Карточки" Height="500" Width="380"
+        Title="Карточки" Height="580" Width="400"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <converters:PhotoPathToOptionalImageSourceConverter x:Key="PhotoPathToOptionalImageSourceConverter" />
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -23,8 +28,50 @@
                     Padding="10,4" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Cards}">
+        <Border Grid.Row="1"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="8"
+                Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="Поиск по имени:" FontSize="11" Margin="0,0,0,2" />
+                <TextBox Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}"
+                         Padding="4"
+                         Margin="0,0,0,8" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <RadioButton Content="Все"
+                                 GroupName="GenderFilter"
+                                 IsChecked="True"
+                                 Command="{Binding SetGenderFilterCommand}"
+                                 CommandParameter="All"
+                                 Margin="0,0,12,0" />
+                    <RadioButton Content="Мальчики"
+                                 GroupName="GenderFilter"
+                                 Command="{Binding SetGenderFilterCommand}"
+                                 CommandParameter="Boys"
+                                 Margin="0,0,12,0" />
+                    <RadioButton Content="Девочки"
+                                 GroupName="GenderFilter"
+                                 Command="{Binding SetGenderFilterCommand}"
+                                 CommandParameter="Girls" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Возраст от" VerticalAlignment="Center" FontSize="11" Margin="0,0,4,0" />
+                    <TextBox Text="{Binding MinAge, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                             Width="40" Padding="2" />
+                    <TextBlock Text="до" VerticalAlignment="Center" FontSize="11" Margin="8,0,4,0" />
+                    <TextBox Text="{Binding MaxAge, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                             Width="40" Padding="2" />
+                    <TextBlock Text="лет" VerticalAlignment="Center" FontSize="11" Margin="4,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding CardsView}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="#CCCCCC"
@@ -37,6 +84,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <Border Grid.Column="0"
@@ -44,10 +92,14 @@
                                         Background="#EEEEEE"
                                         CornerRadius="4"
                                         VerticalAlignment="Top">
-                                    <TextBlock Text="🐱"
-                                               FontSize="24"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Center" />
+                                    <Grid>
+                                        <TextBlock Text="🐱"
+                                                   FontSize="24"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                        <Image Source="{Binding PhotoPath, Converter={StaticResource PhotoPathToOptionalImageSourceConverter}}"
+                                               Stretch="UniformToFill" />
+                                    </Grid>
                                 </Border>
 
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
@@ -55,20 +107,33 @@
                                     <TextBlock Text="{Binding Breed}" FontSize="12" Foreground="Gray" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="0" Grid.ColumnSpan="2"
-                                            Orientation="Horizontal"
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Vertical"
                                             HorizontalAlignment="Right"
-                                            VerticalAlignment="Top">
-                                    <Button Content="✎"
-                                            Width="20" Height="20" Padding="0"
-                                            Margin="0,0,4,0"
-                                            ToolTip="Редактировать"
-                                            Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}" />
-                                    <Button Content="✕"
-                                            Width="20" Height="20" Padding="0"
-                                            ToolTip="Удалить"
-                                            Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            VerticalAlignment="Center"
+                                            Margin="8,0,0,0">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                Margin="0,0,0,4">
+                                        <Button Content="✎"
+                                                Width="20" Height="20" Padding="0"
+                                                Margin="0,0,4,0"
+                                                ToolTip="Редактировать"
+                                                Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" />
+                                        <Button Content="✕"
+                                                Width="20" Height="20" Padding="0"
+                                                ToolTip="Удалить"
+                                                Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" />
+                                    </StackPanel>
+
+                                    <Button Content="🔍"
+                                            Width="36" Height="36"
+                                            FontSize="18" Padding="0"
+                                            HorizontalAlignment="Right"
+                                            ToolTip="Посмотреть детали карточки"
+                                            Command="{Binding Path=DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                             CommandParameter="{Binding}" />
                                 </StackPanel>
                             </Grid>
