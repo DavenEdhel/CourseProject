@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:PhotoPathToOptionalImageSourceConverter x:Key="PhotoPathToOptionalImageSourceConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -22,10 +23,12 @@
             <Button Content="Добавить"
                     Command="{Binding AddCommand}"
                     Padding="10,4"
-                    Margin="0,0,8,0" />
+                    Margin="0,0,8,0"
+                    Visibility="{Binding CanManageCards, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <Button Content="Статистика"
                     Command="{Binding StatisticsCommand}"
-                    Padding="10,4" />
+                    Padding="10,4"
+                    Visibility="{Binding CanViewStatistics, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </StackPanel>
 
         <Border Grid.Row="1"
@@ -114,7 +117,8 @@
                                             Margin="8,0,0,0">
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right"
-                                                Margin="0,0,0,4">
+                                                Margin="0,0,0,4"
+                                                Visibility="{Binding Path=DataContext.CanManageCards, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Button Content="✎"
                                                 Width="20" Height="20" Padding="0"
                                                 Margin="0,0,4,0"

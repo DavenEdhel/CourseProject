@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CourseProject.DataLayer.BusinessModels;
 using CourseProject.DataLayer.Repositories;
 using CourseProject.UI.Services;
 
@@ -24,6 +25,10 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<CardEditViewModel> Cards { get; } = new();
 
     public ICollectionView CardsView { get; }
+
+    public bool CanViewStatistics => CurrentUser.Instance.Role == Role.Admin;
+
+    public bool CanManageCards => CurrentUser.Instance.Role != Role.User;
 
     [ObservableProperty]
     private string nameFilter = string.Empty;
