@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:CourseProject.UI"
              xmlns:converters="clr-namespace:CourseProject.UI.Converters">
     <Application.Resources>
-        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

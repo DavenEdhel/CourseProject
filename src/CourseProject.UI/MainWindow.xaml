@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CourseProject.UI"
         xmlns:converters="clr-namespace:CourseProject.UI.Converters"
         mc:Ignorable="d"
-        Title="Карточки" Height="580" Width="400"
+        Background="{StaticResource WindowBackgroundBrush}"
+        Title="Питомник — Список питомцев" Height="620" Width="400"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <converters:PhotoPathToOptionalImageSourceConverter x:Key="PhotoPathToOptionalImageSourceConverter" />
@@ -16,29 +17,33 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+        <TextBlock Grid.Row="0" Text="Питомник" Style="{StaticResource HeadingTextStyle}" Margin="0,0,0,10" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
             <Button Content="Добавить"
                     Command="{Binding AddCommand}"
-                    Padding="10,4"
+                    Style="{StaticResource PrimaryButtonStyle}"
                     Margin="0,0,8,0"
                     Visibility="{Binding CanManageCards, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <Button Content="Статистика"
                     Command="{Binding StatisticsCommand}"
-                    Padding="10,4"
+                    Style="{StaticResource SecondaryButtonStyle}"
                     Visibility="{Binding CanViewStatistics, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </StackPanel>
 
-        <Border Grid.Row="1"
-                BorderBrush="#CCCCCC"
+        <Border Grid.Row="2"
+                Background="{StaticResource PanelOverlayBrush}"
+                BorderBrush="{StaticResource BorderPinkBrush}"
                 BorderThickness="1"
                 CornerRadius="4"
                 Padding="8"
                 Margin="0,0,0,10">
             <StackPanel>
-                <TextBlock Text="Поиск по имени:" FontSize="11" Margin="0,0,0,2" />
+                <TextBlock Text="Поиск по имени:" FontSize="11" Foreground="{StaticResource AccentTextBrush}" Margin="0,0,0,2" />
                 <TextBox Text="{Binding NameFilter, UpdateSourceTrigger=PropertyChanged}"
                          Padding="4"
                          Margin="0,0,0,8" />
@@ -62,22 +67,22 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Возраст от" VerticalAlignment="Center" FontSize="11" Margin="0,0,4,0" />
+                    <TextBlock Text="Возраст от" VerticalAlignment="Center" FontSize="11" Foreground="{StaticResource AccentTextBrush}" Margin="0,0,4,0" />
                     <TextBox Text="{Binding MinAge, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                              Width="40" Padding="2" />
-                    <TextBlock Text="до" VerticalAlignment="Center" FontSize="11" Margin="8,0,4,0" />
+                    <TextBlock Text="до" VerticalAlignment="Center" FontSize="11" Foreground="{StaticResource AccentTextBrush}" Margin="8,0,4,0" />
                     <TextBox Text="{Binding MaxAge, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
                              Width="40" Padding="2" />
-                    <TextBlock Text="лет" VerticalAlignment="Center" FontSize="11" Margin="4,0,0,0" />
+                    <TextBlock Text="лет" VerticalAlignment="Center" FontSize="11" Foreground="{StaticResource AccentTextBrush}" Margin="4,0,0,0" />
                 </StackPanel>
             </StackPanel>
         </Border>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding CardsView}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="#CCCCCC"
+                        <Border BorderBrush="{StaticResource BorderPinkBrush}"
                                 BorderThickness="1"
                                 CornerRadius="4"
                                 Background="White"
@@ -92,7 +97,7 @@
 
                                 <Border Grid.Column="0"
                                         Width="50" Height="50"
-                                        Background="#EEEEEE"
+                                        Background="{StaticResource IconButtonBackgroundBrush}"
                                         CornerRadius="4"
                                         VerticalAlignment="Top">
                                     <Grid>
@@ -122,11 +127,13 @@
                                         <Button Content="✎"
                                                 Width="20" Height="20" Padding="0"
                                                 Margin="0,0,4,0"
+                                                Style="{StaticResource IconButtonStyle}"
                                                 ToolTip="Редактировать"
                                                 Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}" />
                                         <Button Content="✕"
                                                 Width="20" Height="20" Padding="0"
+                                                Style="{StaticResource IconButtonStyle}"
                                                 ToolTip="Удалить"
                                                 Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}" />
@@ -135,6 +142,7 @@
                                     <Button Content="🔍"
                                             Width="36" Height="36"
                                             FontSize="18" Padding="0"
+                                            Style="{StaticResource IconButtonStyle}"
                                             HorizontalAlignment="Right"
                                             ToolTip="Посмотреть детали карточки"
                                             Command="{Binding Path=DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=Window}}"

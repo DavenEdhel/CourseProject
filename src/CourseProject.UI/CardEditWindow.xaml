@@ -7,17 +7,14 @@
         xmlns:converters="clr-namespace:CourseProject.UI.Converters"
         mc:Ignorable="d"
         FontSize="12"
-        Title="Карточка породистого кота" Height="550" Width="400"
+        Background="{StaticResource WindowBackgroundBrush}"
+        Title="Питомник — Карточка кота" Height="550" Width="400"
         ResizeMode="NoResize">
     <Window.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <converters:PhotoPathToImageSourceConverter x:Key="PhotoPathToImageSourceConverter" />
     </Window.Resources>
     <Grid>
-        <Grid.Background>
-            <ImageBrush ImageSource="/Images/flowers.png"/>
-        </Grid.Background>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -37,9 +34,8 @@
             </Grid>
             <Grid Grid.Column="0" Grid.ColumnSpan="2">
                 <TextBlock Text="Карточка участника"
-            FontSize="14" FontWeight="Bold" 
-            HorizontalAlignment="Center" VerticalAlignment="Center"
-            TextWrapping="Wrap" TextAlignment="Center"/>
+            Style="{StaticResource HeadingTextStyle}"
+            VerticalAlignment="Center"/>
             </Grid>
 
             <!-- фото -->
@@ -111,7 +107,7 @@
             </GroupBox>
         </UniformGrid>
         <!-- чекбокс -->
-        <Border Grid.Row="2" Padding="0 5" Background="#90FFFFFF">
+        <Border Grid.Row="2" Padding="0 5" Background="{StaticResource PanelOverlayBrush}">
             <UniformGrid Columns="1" Margin="1">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <CheckBox x:Name="CheckBoxVaccinated" Content="Приавивки" IsChecked="{Binding IsVaccinated}" Margin="3,0" FontSize="12"/>
@@ -124,14 +120,14 @@
         <UniformGrid Grid.Row="3" Columns="2" Margin="0,20,0,20">
 
             <Button x:Name="ButtonSave" Content="Сохранить"
-         Margin="15,1" Padding="3,1"
-         Background="#FA5772" FontWeight="Bold" FontSize="11"
+         Margin="15,1"
+         Style="{StaticResource PrimaryButtonStyle}" FontSize="11"
          Command="{Binding SaveCommand}"/>
 
 
             <Button x:Name="ButtonClear" Content="Очистить"
-         Margin="15,1" Padding="3,1"
-         Background="LightCoral" FontWeight="Bold" FontSize="11"/>
+         Margin="15,1"
+         Style="{StaticResource TertiaryButtonStyle}" FontSize="11"/>
 
 
         </UniformGrid>

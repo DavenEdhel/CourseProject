@@ -4,17 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Статистика" Height="520" Width="420"
+        Background="{StaticResource WindowBackgroundBrush}"
+        Title="Питомник — Статистика" Height="560" Width="420"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="16">
 
+            <TextBlock Text="Питомник" Style="{StaticResource HeadingTextStyle}" Margin="0,0,0,16" />
+
             <TextBlock Text="Возраст котов (лет)"
                        FontSize="14" FontWeight="Bold"
+                       Foreground="{StaticResource AccentTextBrush}"
                        Margin="0,0,0,10" />
 
-            <Border BorderBrush="#CCCCCC" BorderThickness="1" Padding="8">
+            <Border Background="{StaticResource PanelOverlayBrush}" BorderBrush="{StaticResource BorderPinkBrush}" BorderThickness="1" Padding="8">
                 <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
                     <ItemsControl ItemsSource="{Binding AgeHistogram}">
                         <ItemsControl.ItemsPanel>
@@ -33,7 +37,7 @@
                                     <Border Grid.Row="0"
                                             Height="{Binding BarHeight}"
                                             VerticalAlignment="Bottom"
-                                            Background="#4A90D9" />
+                                            Background="{StaticResource PrimaryPinkBrush}" />
                                     <TextBlock Grid.Row="0"
                                                Text="{Binding Count}"
                                                VerticalAlignment="Top"
@@ -55,19 +59,20 @@
 
             <TextBlock Text="Пол"
                        FontSize="14" FontWeight="Bold"
+                       Foreground="{StaticResource AccentTextBrush}"
                        Margin="0,20,0,10" />
 
-            <Border BorderBrush="#CCCCCC" BorderThickness="1" Padding="8">
+            <Border Background="{StaticResource PanelOverlayBrush}" BorderBrush="{StaticResource BorderPinkBrush}" BorderThickness="1" Padding="8">
                 <StackPanel HorizontalAlignment="Center">
                     <Grid Width="180" Height="180">
-                        <Path Data="{Binding MaleGeometry}" Fill="#4A90D9" />
-                        <Path Data="{Binding FemaleGeometry}" Fill="#D94A90" />
+                        <Path Data="{Binding MaleGeometry}" Fill="{StaticResource AccentTextBrush}" />
+                        <Path Data="{Binding FemaleGeometry}" Fill="#F4A261" />
                     </Grid>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                        <Border Width="12" Height="12" Background="#4A90D9" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <Border Width="12" Height="12" Background="{StaticResource AccentTextBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding MaleLabel}" Margin="0,0,16,0" VerticalAlignment="Center" />
-                        <Border Width="12" Height="12" Background="#D94A90" Margin="0,0,6,0" VerticalAlignment="Center" />
+                        <Border Width="12" Height="12" Background="#F4A261" Margin="0,0,6,0" VerticalAlignment="Center" />
                         <TextBlock Text="{Binding FemaleLabel}" VerticalAlignment="Center" />
                     </StackPanel>
                 </StackPanel>

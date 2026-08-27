@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProject.UI"
         mc:Ignorable="d"
-        Title="CourseProject — Login" Height="260" Width="320"
+        Background="{StaticResource WindowBackgroundBrush}"
+        Title="Питомник — Вход" Height="340" Width="320"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Grid Margin="20">
@@ -14,28 +15,32 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="Логин" />
+        <TextBlock Grid.Row="0" Text="Питомник" Style="{StaticResource HeadingTextStyle}" Margin="0,0,0,16" />
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,10">
+            <Label Content="Логин" Padding="0" Margin="0,0,0,2" />
             <TextBox Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Margin="0,0,0,4">
-            <TextBlock Text="Пароль" />
+        <StackPanel Grid.Row="2" Margin="0,0,0,4">
+            <Label Content="Пароль" Padding="0" Margin="0,0,0,2" />
             <PasswordBox x:Name="PasswordBox" PasswordChanged="PasswordBox_PasswordChanged" />
         </StackPanel>
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="3"
                    Text="{Binding ErrorMessage}"
                    Foreground="Red"
                    TextWrapping="Wrap"
                    Margin="0,0,0,16" />
 
-        <Button Grid.Row="3"
+        <Button Grid.Row="4"
                 Content="Войти"
                 Command="{Binding LoginCommand}"
-                Width="100"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Width="110"
                 HorizontalAlignment="Right" />
     </Grid>
 </Window>
