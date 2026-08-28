@@ -1,0 +1,420 @@
+' ============================================================================
+' UML-диаграммы и графический материал к курсовому проекту «Питомник»
+' Соответствуют п.5 листа задания («Перечень графического материала»):
+'   1) трассировочная матрица
+'   2) USE CASE диаграммы
+'   3) схема ресурсов системы
+'   4) схема базы данных
+'   5) диаграмма классов
+'   6) макеты окон
+'   7) 3 схемы алгоритмов
+'
+' Файл содержит несколько независимых диаграмм подряд (каждая — свой блок
+' @startuml/@enduml или @startsalt/@endsalt). Как отрендерить:
+'   - VS Code: расширение "PlantUML" (jebbs.plantuml) — открыть файл,
+'     Alt+D для предпросмотра, "Export Current Diagram" для PNG/SVG;
+'   - IntelliJ/Rider: плагин "PlantUML integration";
+'   - онлайн: вставить блок целиком на https://www.plantuml.com/plantuml ;
+'   - локально: java -jar plantuml.jar "UML-диаграммы.puml" (нужен Graphviz
+'     для некоторых схем — для activity/class/salt он не обязателен).
+' Каждый блок сохранится в отдельный файл, названный по имени диаграммы.
+' ============================================================================
+
+
+' ============================================================================
+' 1) ТРАССИРОВОЧНАЯ МАТРИЦА ТРЕБОВАНИЙ (см. таблицу 6 пояснительной записки)
+' ============================================================================
+@startsalt TraceabilityMatrix
+{#
+  № | Требование | Реализующие компоненты | Проверка
+  ТР-1 | Авторизация с разграничением по трём ролям | LoginViewModel, LoginWindow, IUserRepository/UserRepository, CurrentUser, Role | Т-1 – Т-3
+  ТР-2 | Просмотр списка карточек с миниатюрой | MainViewModel, MainWindow, PhotoPathToOptionalImageSourceConverter | Т-4
+  ТР-3 | Добавление/редактирование/удаление карточек | CardEditViewModel, CardEditWindow, MainViewModel.CanManageCards, ICatRepository/CatRepository | Т-5, Т-6, Т-7
+  ТР-4 | Просмотр карточки в режиме «только чтение» | CardDetailsViewModel, CardDetailsWindow | Т-8
+  ТР-5 | Загрузка фотографии карточки | CardEditViewModel.SetPhoto, PhotoPathToImageSourceConverter | Т-9
+  ТР-6 | Поиск и фильтрация по имени, полу, возрасту | MainViewModel (SearchText, GenderFilter, AgeFrom, AgeTo) | Т-10
+  ТР-7 | Статистика (доступна только роли Admin) | StatisticsViewModel, StatisticsWindow, MainViewModel.CanViewStatistics | Т-11, Т-12
+  ТР-8 | Скрытие функций редактирования для роли User | MainViewModel.CanManageCards, MainWindow.xaml (Visibility) | Т-13
+}
+@endsalt
+
+
+' ============================================================================
+' 2) USE CASE ДИАГРАММА (см. таблицу 5 пояснительной записки)
+' ============================================================================
+@startuml UseCaseDiagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor Admin
+actor ContentManager
+actor User
+
+rectangle "Питомник" {
+  usecase "Вход в систему" as UC1
+  usecase "Просмотр списка карточек" as UC2
+  usecase "Поиск и фильтрация карточек" as UC3
+  usecase "Просмотр карточки кота" as UC4
+  usecase "Добавление карточки кота" as UC5
+  usecase "Редактирование карточки кота" as UC6
+  usecase "Удаление карточки кота" as UC7
+  usecase "Просмотр статистики" as UC8
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+Admin --> UC8
+
+ContentManager --> UC1
+ContentManager --> UC2
+ContentManager --> UC3
+ContentManager --> UC4
+ContentManager --> UC5
+ContentManager --> UC6
+ContentManager --> UC7
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+@enduml
+
+
+' ============================================================================
+' 3) СХЕМА РЕСУРСОВ СИСТЕМЫ (см. таблицу 7 пояснительной записки)
+' ============================================================================
+@startuml ResourceScheme
+node "Рабочая станция пользователя" {
+  artifact "CourseProject.UI.exe" as App
+
+  folder "Data" {
+    database "CourseProjectDb.mdf / .ldf" as DB
+  }
+  folder "Styles" {
+    file "Theme.xaml" as Theme
+  }
+  folder "Images" {
+    file "flowers.png" as Bg
+    file "no_img.png" as NoImg
+  }
+  folder "avatars" as Avatars
+}
+
+note right of Avatars : создаётся во время выполнения,\nрядом с исполняемым файлом
+
+App --> DB : LocalDB\n(AttachDbFilename)
+App --> Theme : ResourceDictionary\n(единый стиль)
+App --> Bg : фон окон
+App --> NoImg : заглушка фото\n(нет/повреждено)
+App --> Avatars : загруженные\nфотографии котов
+@enduml
+
+
+' ============================================================================
+' 4) СХЕМА БАЗЫ ДАННЫХ (см. таблицы 8-9 пояснительной записки)
+' ============================================================================
+@startuml DatabaseSchema
+hide circle
+skinparam linetype ortho
+
+entity "Cat" as Cat {
+  * Id : int <<PK>>
+  --
+  Name : nvarchar(100) <<NOT NULL>>
+  Breed : nvarchar(100) <<NOT NULL>>
+  Color : nvarchar(100) <<NOT NULL>>
+  DateOfBirth : date <<NULL>>
+  Weight : float <<NOT NULL>>
+  EyeColor : nvarchar(50) <<NOT NULL>>
+  IsMale : bit <<NOT NULL>>
+  IsVaccinated : bit <<NOT NULL>>
+  IsSterilized : bit <<NOT NULL>>
+  HasDocuments : bit <<NOT NULL>>
+  PhotoPath : nvarchar(260) <<NULL>>
+}
+
+entity "User" as User {
+  * Id : int <<PK, задаётся вручную>>
+  --
+  Login : nvarchar(50) <<NOT NULL>>
+  Password : nvarchar(50) <<NOT NULL>>
+  Role : nvarchar(50) <<NOT NULL>>
+}
+
+note as N1
+  Прямая связь между таблицами отсутствует:
+  доступ разграничивается по роли текущего
+  пользователя, а не по владению записью.
+  Технические таблицы Counter/Table (наследие
+  первоначальной генерации проекта) не показаны.
+end note
+@enduml
+
+
+' ============================================================================
+' 5) ДИАГРАММА КЛАССОВ (см. таблицу 10 пояснительной записки)
+' ============================================================================
+@startuml ClassDiagram
+skinparam classAttributeIconSize 0
+
+class Cat {
+  +int Id
+  +string Name
+  +string Breed
+  +string Color
+  +DateOnly? DateOfBirth
+  +double Weight
+  +string EyeColor
+  +bool IsMale
+  +bool IsVaccinated
+  +bool IsSterilized
+  +bool HasDocuments
+  +string? PhotoPath
+}
+
+class User {
+  +int Id
+  +string Login
+  +string Password
+  +string Role
+}
+
+enum Role {
+  Admin
+  ContentManager
+  User
+}
+
+class CurrentUser << (S,#FF7700) singleton >> {
+  +{static} Instance : CurrentUser
+  +Role : Role
+  +Set(user : User) : void
+}
+
+interface ICatRepository {
+  +GetAll() : IReadOnlyList<Cat>
+  +GetById(id : int) : Cat
+  +Save(cat : Cat) : void
+  +Delete(id : int) : void
+}
+class CatRepository
+
+interface IUserRepository {
+  +TryGet(login, password) : User
+}
+class UserRepository
+
+interface INavigationService {
+  +Navigate(window : Window, mode : NavigationMode) : void
+  +Back() : void
+}
+class NavigationService
+
+class LoginViewModel {
+  +UserName : string
+  +Password : string
+  +ErrorMessage : string
+  +LoginCommand
+}
+
+class MainViewModel {
+  +Cats : ObservableCollection<Cat>
+  +SearchText : string
+  +GenderFilter
+  +AgeFrom : int
+  +AgeTo : int
+  +CanManageCards : bool
+  +CanViewStatistics : bool
+  +AddCommand
+  +EditCommand
+  +DeleteCommand
+  +ViewDetailsCommand
+  +ShowStatisticsCommand
+}
+
+class CardEditViewModel {
+  +Name, Breed, Color, DateOfBirth, Weight, EyeColor : ...
+  +IsMale, IsVaccinated, IsSterilized, HasDocuments : bool
+  +PhotoPath : string
+  +SetPhoto(path : string) : void
+  +SaveCommand
+}
+
+class CardDetailsViewModel {
+  +(те же поля, что и CardEditViewModel, только для чтения)
+}
+
+class StatisticsViewModel {
+  +AgeHistogram : ObservableCollection<AgeBucket>
+  +MaleGeometry : Geometry
+  +FemaleGeometry : Geometry
+  +MaleLabel : string
+  +FemaleLabel : string
+}
+
+ICatRepository <|.. CatRepository
+IUserRepository <|.. UserRepository
+INavigationService <|.. NavigationService
+
+CatRepository ..> Cat
+UserRepository ..> User
+CurrentUser --> Role
+CurrentUser ..> User
+
+LoginViewModel ..> IUserRepository
+LoginViewModel ..> INavigationService
+
+MainViewModel ..> ICatRepository
+MainViewModel ..> INavigationService
+MainViewModel ..> CurrentUser
+
+CardEditViewModel ..> ICatRepository
+CardEditViewModel ..> INavigationService
+
+CardDetailsViewModel ..> ICatRepository
+
+StatisticsViewModel ..> ICatRepository
+@enduml
+
+
+' ============================================================================
+' 6) МАКЕТЫ ОКОН (соответствуют реальным скриншотам в п. 3.7 записки)
+' ============================================================================
+@startsalt Mockup_LoginWindow
+{
+  Питомник — Вход
+  ==
+  Логин  | "________"
+  Пароль | "________"
+  ..
+  [Войти]
+  <color:red>Неверное имя пользователя или пароль.
+}
+@endsalt
+
+@startsalt Mockup_MainWindow
+{
+  Питомник — Список питомцев
+  ==
+  {* Поиск: | "________________" | Пол: () Все () Коты () Кошки | Возраст от [__] до [__] }
+  ==
+  {#
+   . | Кличка | Порода | .
+   🐱 | Барсик | Шотландская вислоухая | [✎][✕]
+   .  |        |                       | [🔍]
+   🐱 | Мурка  | Британская            | [✎][✕]
+   .  |        |                       | [🔍]
+  }
+  ==
+  [Добавить] | [Статистика]
+}
+@endsalt
+
+@startsalt Mockup_CardEditWindow
+{
+  Питомник — Карточка кота
+  ==
+  {фото}
+  Кличка         | "________"
+  Порода         | "________"
+  Окрас          | "________"
+  Дата рождения  | "__.__.____"
+  Вес            | "___"
+  Цвет глаз      | ^Список^
+  Пол            | () Кот () Кошка
+  [X] Вакцинирован
+  [X] Стерилизован
+  [X] Есть документы
+  ==
+  [Сохранить] | [Очистить]
+}
+@endsalt
+
+@startsalt Mockup_CardDetailsWindow
+{
+  Питомник — Просмотр карточки
+  ==
+  {фото}
+  Кличка: Барсик
+  Порода: Шотландская вислоухая
+  Окрас: Мраморный
+  Дата рождения: __.__.____
+  Вес: ___ кг
+  Цвет глаз: Зелёный
+  Пол: Кот
+  [X] Вакцинирован
+  [X] Стерилизован
+  [ ] Есть документы
+  ==
+  [Закрыть]
+}
+@endsalt
+
+@startsalt Mockup_StatisticsWindow
+{
+  Питомник — Статистика
+  ==
+  Возраст котов (лет)
+  {гистограмма распределения по возрасту}
+  ==
+  Пол
+  {круговая диаграмма: Коты / Кошки}
+}
+@endsalt
+
+
+' ============================================================================
+' 7) СХЕМЫ АЛГОРИТМОВ (соответствуют Приложению А пояснительной записки)
+' ============================================================================
+@startuml Algo_A1_GetAgeInYears
+title Алгоритм А.1 — Расчёт возраста питомца (GetAgeInYears)
+start
+:age := today.Year − dateOfBirth.Year;
+if (today.Month < dateOfBirth.Month\nИЛИ (today.Month = dateOfBirth.Month\nИ today.Day < dateOfBirth.Day)?) then (да)
+  :age := age − 1;
+else (нет)
+endif
+:age := max(age, 0);
+:вернуть age;
+stop
+@enduml
+
+@startuml Algo_A2_BuildAgeHistogram
+title Алгоритм А.2 — Построение гистограммы распределения по возрасту
+start
+:отобрать карточки с заполненной DateOfBirth;
+:для каждой карточки вычислить возраст\n(алгоритм А.1);
+:сгруппировать карточки по возрасту,\nотсортировать группы по возрастанию;
+:maxCount := наибольшее количество\nкарточек в одной группе;
+while (для каждой возрастной группы) is (есть ещё)
+  if (maxCount = 0?) then (да)
+    :BarHeight := 0;
+  else (нет)
+    :BarHeight := Count / maxCount × 120;
+  endif
+endwhile (обработаны все)
+:сформировать коллекцию AgeHistogram;
+stop
+@enduml
+
+@startuml Algo_A3_BuildGenderPie
+title Алгоритм А.3 — Построение круговой диаграммы соотношения полов
+start
+:total := общее количество карточек;
+:maleCount := количество карточек\nс IsMale = true;
+:femaleCount := total − maleCount;
+:сформировать подписи с процентным\nсоотношением;
+if (total = 0?) then (да)
+  :оба сектора — пустая геометрия\n(Geometry.Empty);
+  stop
+else (нет)
+endif
+:maleSweep := maleCount / total × 360;
+:построить сектор «коты» (0°..maleSweep)\nи сектор «кошки» (maleSweep..360°)\nчерез CreatePieSlice/GetPointOnCircle;
+stop
+@enduml

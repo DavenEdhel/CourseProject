@@ -21,7 +21,7 @@ public partial class LoginViewModel : ObservableObject
     [ObservableProperty]
     private string errorMessage = string.Empty;
 
-    private static bool bypassAuth = true;
+    private static bool bypassAuth = false;
 
     public LoginViewModel(IUserRepository userRepository, INavigationService navigation)
     {
